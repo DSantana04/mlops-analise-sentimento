@@ -13,7 +13,7 @@ modelo = joblib.load(MODEL_PATH)
 app = FastAPI(title="API de Sentimento", version='0.1.0')
 
 class Entrada(BaseModel):
-    texto: str = Field(min_length=3, max_length=1000, examples='Adorei o produto!')
+    texto: str = Field(min_length=3, max_length=1000, examples=['Adorei o produto!'])
 
 class Saida(BaseModel):
     sentimento: str
@@ -27,5 +27,20 @@ def health():
 
 @app.post("/predict", response_model=Saida, summary="Realiza a predição do sentimento")
 def predict(entrada: Entrada):
-    # TODO: Implementar a lógica de predição usando o modelo carregado
-    pass
+    probas = model.predict_proba([entrada.texto])[0]
+    i = int(probas.argmax())
+    resultado = Saida(
+        sentimento=model.classes_[i],
+        confianca=round(float(probas[i]), 4),
+        versao_modelo="0.1.0"
+    )
+
+    logger.info(json.dumps({
+        "texto": "predicao",
+        "sentimento": resultado.sentimento,
+        "confianca": resultado.confianca,
+        "tamanho_texto": len(entrada.texto),
+        "versao_modelo": resultado.versao_modelo
+    }))
+
+    return resultado
