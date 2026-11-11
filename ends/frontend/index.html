@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101117" />
+    <title>OQSente? | análise de sentimento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-mood="idle">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <main class="app-shell">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Alternar tema">
+        <span class="theme-icon">◐</span><span id="theme-label">Tema claro</span>
+      </button>
+      <button class="accessibility-toggle" id="accessibility-toggle" type="button" aria-expanded="false" aria-controls="accessibility-panel">
+        <span aria-hidden="true">◒</span> Acessibilidade
+      </button>
+      <aside class="accessibility-panel" id="accessibility-panel" aria-label="Opções de acessibilidade" hidden>
+        <div class="panel-heading"><strong>Ajustes de leitura</strong><button id="accessibility-close" type="button" aria-label="Fechar ajustes">×</button></div>
+        <label class="access-option"><span><strong>Fonte legível</strong><small>Mais confortável para dislexia</small></span><input id="dyslexia-toggle" type="checkbox" /><i></i></label>
+        <label class="access-option"><span><strong>Texto maior</strong><small>Aumenta textos e espaços</small></span><input id="large-text-toggle" type="checkbox" /><i></i></label>
+        <label class="vision-option" for="vision-select"><span><strong>Visão de cores</strong><small>Escolha um perfil de contraste</small></span><span class="select-wrap"><select id="vision-select"><option value="normal">Cores naturais</option><option value="protanopia">Protanopia</option><option value="deuteranopia">Deuteranopia</option><option value="tritanopia">Tritanopia</option><option value="achromatopsia">Acromatopsia</option></select><b aria-hidden="true">⌄</b></span></label>
+        <button class="reset-accessibility" id="reset-accessibility" type="button">Restaurar ajustes</button>
+      </aside>
+
+      <section class="composer-view" id="composer-view">
+        <div class="brand-mark">laboratório de sentimentos <span></span></div>
+        <h1>OQSente<span>?</span></h1>
+        <p class="intro">Uma pausa para entender o que mora nas suas palavras.</p>
+        <div class="emotion-glyphs" aria-hidden="true">
+          <svg class="heart" viewBox="0 0 100 90"><path d="M50 82S6 57 6 25C6 7 28-2 42 13L50 22 58 13C72-2 94 7 94 25c0 32-44 57-44 57Z" /></svg>
+          <svg class="brain" viewBox="0 0 100 90"><path d="M47 78H31c-10 0-17-8-17-18 0-4 1-7 3-10-6-4-9-10-9-17 0-11 8-20 19-21C30 5 38 1 46 7c2-3 5-5 9-5 7 0 12 5 12 12 10 1 17 10 17 20 0 6-2 11-6 15 3 3 5 7 5 12 0 10-8 17-17 17H53M49 10v68M31 31c6 0 10 4 10 10M69 29c-6 0-10 4-10 10M29 55c6 0 10 4 10 10M69 54c-5 0-9 4-9 9" /></svg>
+        </div>
+
+        <form class="comment-form" id="comment-form">
+          <label for="comment">Seu comentário</label>
+          <textarea id="comment" name="comment" maxlength="1000" minlength="3" placeholder="Escreva seu comentário..." required></textarea>
+          <div class="field-footer">
+            <span id="char-count">0 / 1000</span>
+            <button class="submit-button" id="submit-button" type="submit" disabled>
+              <span>Sentir agora</span><span class="arrow">↗</span>
+            </button>
+          </div>
+        </form>
+        <p class="hint">mínimo de 3 caracteres · sua mensagem fica só nesta análise</p>
+      </section>
+
+      <section class="loading-view" id="loading-view" aria-live="polite" hidden>
+        <div class="pulse-ring"><span></span></div>
+        <p class="eyebrow">processando sinais</p>
+        <h2>Sentindo as entrelinhas<span>...</span></h2>
+        <p>O modelo está lendo a intenção por trás do seu comentário.</p>
+      </section>
+
+      <section class="result-view" id="result-view" hidden>
+        <div class="result-topline"><span class="eyebrow">leitura concluída</span><span id="result-version">modelo 0.1.0</span></div>
+        <div class="result-card">
+          <div class="result-heading">
+            <div>
+              <p class="eyebrow">o sentimento predominante é</p>
+              <h2 id="sentiment">Positivo</h2>
+            </div>
+            <div class="confidence-orb"><strong id="confidence">0%</strong><span>confiança</span></div>
+          </div>
+          <div class="polarity" id="polarity">Positivo</div>
+          <p class="analysis" id="analysis"></p>
+          <blockquote id="quoted-comment"></blockquote>
+          <div class="metrics" id="metrics"></div>
+        </div>
+        <div class="feedback-actions" aria-label="Avaliar resposta">
+          <span>Essa leitura ajudou?</span>
+          <button class="feedback-button" data-reaction="like" type="button" aria-label="A resposta ajudou">♡</button>
+          <button class="feedback-button" data-reaction="dislike" type="button" aria-label="A resposta não ajudou">♧</button>
+          <button class="report-button" id="report-feedback" type="button">Relatar resposta</button>
+          <small id="feedback-status" role="status"></small>
+        </div>
+        <button class="new-comment" id="new-comment" type="button"><span>←</span> analisar outro comentário</button>
+      </section>
+
+      <div class="feedback-modal" id="feedback-modal" hidden>
+        <div class="feedback-backdrop" id="feedback-close"></div>
+        <form class="feedback-dialog" id="feedback-form">
+          <button class="modal-close" id="feedback-cancel" type="button" aria-label="Fechar relato">×</button>
+          <p class="eyebrow">ajudar a melhorar</p>
+          <h2>Como você classificaria esse comentário?</h2>
+          <p>Seu feedback será registrado para análise humana. Ele não altera o modelo automaticamente.</p>
+          <div class="sentiment-choice">
+            <label><input type="radio" name="human-sentiment" value="positivo" required /><span>Positivo</span></label>
+            <label><input type="radio" name="human-sentiment" value="negativo" /><span>Negativo</span></label>
+          </div>
+          <label class="report-label" for="report-text">O que pareceu errado? <small>(opcional)</small></label>
+          <textarea id="report-text" maxlength="500" placeholder="Conte um pouco mais..." ></textarea>
+          <button class="submit-button" type="submit">Enviar relato <span class="arrow">↗</span></button>
+        </form>
+      </div>
+
+      <section class="error-view" id="error-view" hidden>
+        <div class="error-symbol">!</div>
+        <p class="eyebrow">sinal interrompido</p>
+        <h2>Não conseguimos alcançar o modelo.</h2>
+        <p>A aplicação pode estar descansando ou com problemas de comunicação. Tente novamente mais tarde.</p>
+        <button class="new-comment" id="retry" type="button">tentar novamente <span>↗</span></button>
+      </section>
+    </main>
+    <footer>Danilo Santana · 2026</footer>
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,2 @@
+{"texto": "Não gostei, amei!", "sentimento_modelo": "negativo", "avaliacao_usuario": null, "reacao": "dislike", "relato": null, "criado_em": "2026-11-11T17:06:27.311632+00:00", "versao_modelo": "0.1.0"}
+{"texto": "Não gostei, amei!", "sentimento_modelo": "negativo", "avaliacao_usuario": "positivo", "reacao": "relato", "relato": "O comentário é positivo porque eu estou dizendo que amei o produto, não que não gostei, o que é bom", "criado_em": "2026-11-11T17:07:12.140771+00:00", "versao_modelo": "0.1.0"}
